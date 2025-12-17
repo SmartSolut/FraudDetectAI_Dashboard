@@ -800,7 +800,17 @@ def load_cached_model():
 def load_cached_data():
     """Load data with caching - REMOVE isFlaggedFraud"""
     try:
-        df = pd.read_parquet(BASE_DIR / 'data' / 'processed' / 'paysim_features.parquet')
+        # Try sample file first (for deployment), then fallback to full file
+        sample_path = BASE_DIR / 'data' / 'processed' / 'paysim_features_sample.parquet'
+        full_path = BASE_DIR / 'data' / 'processed' / 'paysim_features.parquet'
+        
+        if sample_path.exists():
+            df = pd.read_parquet(sample_path)
+        elif full_path.exists():
+            df = pd.read_parquet(full_path)
+        else:
+            return None
+        
         # Remove target columns that are not features
         columns_to_remove = ['isFlaggedFraud', 'nameOrig', 'nameDest']
         for col in columns_to_remove:
