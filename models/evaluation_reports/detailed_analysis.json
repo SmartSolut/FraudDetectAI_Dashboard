@@ -1,0 +1,125 @@
+{
+  "Random Forest": {
+    "precision": {
+      "value": 1.0,
+      "meaning": "Proportion of positive predictions that are correct",
+      "formula": "TP / (TP + FP) = 100 / (100 + 0)",
+      "interpretation": "Out of 100 alerts, 100.0 are correct",
+      "strength": "Excellent",
+      "recommendation": "Excellent - No false alerts"
+    },
+    "recall": {
+      "value": 0.9345794392523364,
+      "meaning": "Proportion of actual fraud cases detected",
+      "formula": "TP / (TP + FN) = 100 / (100 + 7)",
+      "interpretation": "Model detects 93.5% of fraud cases",
+      "strength": "Excellent",
+      "recommendation": "Excellent - Detects most fraud"
+    },
+    "f1_score": {
+      "value": 0.966183574879227,
+      "meaning": "Harmonic mean of Precision and Recall",
+      "formula": "2 * (Precision * Recall) / (Precision + Recall)",
+      "interpretation": "Balance between precision and recall: 96.6%",
+      "strength": "Excellent",
+      "recommendation": "Excellent - Good balance"
+    },
+    "roc_auc": {
+      "value": 0.9933485208979328,
+      "meaning": "Model ability to distinguish between fraud and normal",
+      "interpretation": "Model distinguishes correctly 99.3% of the time",
+      "strength": "Excellent",
+      "recommendation": "Excellent - Strong discrimination"
+    },
+    "pr_auc": {
+      "value": 0.9495464391607831,
+      "meaning": "Performance metric for imbalanced data",
+      "interpretation": "Excellent fraud detection performance: 95.0%",
+      "strength": "Excellent",
+      "note": "This is the most important metric for imbalanced data",
+      "recommendation": "Excellent - High performance"
+    }
+  },
+  "XGBoost": {
+    "precision": {
+      "value": 1.0,
+      "meaning": "Proportion of positive predictions that are correct",
+      "formula": "TP / (TP + FP) = 100 / (100 + 0)",
+      "interpretation": "Out of 100 alerts, 100.0 are correct",
+      "strength": "Excellent",
+      "recommendation": "Excellent - No false alerts"
+    },
+    "recall": {
+      "value": 0.9345794392523364,
+      "meaning": "Proportion of actual fraud cases detected",
+      "formula": "TP / (TP + FN) = 100 / (100 + 7)",
+      "interpretation": "Model detects 93.5% of fraud cases",
+      "strength": "Excellent",
+      "recommendation": "Excellent - Detects most fraud"
+    },
+    "f1_score": {
+      "value": 0.966183574879227,
+      "meaning": "Harmonic mean of Precision and Recall",
+      "formula": "2 * (Precision * Recall) / (Precision + Recall)",
+      "interpretation": "Balance between precision and recall: 96.6%",
+      "strength": "Excellent",
+      "recommendation": "Excellent - Good balance"
+    },
+    "roc_auc": {
+      "value": 0.9926521904172003,
+      "meaning": "Model ability to distinguish between fraud and normal",
+      "interpretation": "Model distinguishes correctly 99.3% of the time",
+      "strength": "Excellent",
+      "recommendation": "Excellent - Strong discrimination"
+    },
+    "pr_auc": {
+      "value": 0.9379273615911761,
+      "meaning": "Performance metric for imbalanced data",
+      "interpretation": "Excellent fraud detection performance: 93.8%",
+      "strength": "Excellent",
+      "note": "This is the most important metric for imbalanced data",
+      "recommendation": "Excellent - High performance"
+    }
+  },
+  "Logistic Regression": {
+    "precision": {
+      "value": 0.012130866315402524,
+      "meaning": "Proportion of positive predictions that are correct",
+      "formula": "TP / (TP + FP) = 99 / (99 + 8062)",
+      "interpretation": "Out of 100 alerts, 1.2 are correct",
+      "strength": "Weak",
+      "recommendation": "Weak - Many false alerts"
+    },
+    "recall": {
+      "value": 0.9252336448598131,
+      "meaning": "Proportion of actual fraud cases detected",
+      "formula": "TP / (TP + FN) = 99 / (99 + 8)",
+      "interpretation": "Model detects 92.5% of fraud cases",
+      "strength": "Excellent",
+      "recommendation": "Excellent - Detects most fraud"
+    },
+    "f1_score": {
+      "value": 0.023947750362844702,
+      "meaning": "Harmonic mean of Precision and Recall",
+      "formula": "2 * (Precision * Recall) / (Precision + Recall)",
+      "interpretation": "Balance between precision and recall: 2.4%",
+      "strength": "Weak",
+      "recommendation": "Weak - Needs improvement"
+    },
+    "roc_auc": {
+      "value": 0.9741655711039049,
+      "meaning": "Model ability to distinguish between fraud and normal",
+      "interpretation": "Model distinguishes correctly 97.4% of the time",
+      "strength": "Excellent",
+      "recommendation": "Excellent - Strong discrimination"
+    },
+    "pr_auc": {
+      "value": 0.40964613862172233,
+      "meaning": "Performance metric for imbalanced data",
+      "interpretation": "Excellent fraud detection performance: 41.0%",
+      "strength": "Weak",
+      "note": "This is the most important metric for imbalanced data",
+      "recommendation": "Weak - Needs improvement"
+    }
+  }
+}
