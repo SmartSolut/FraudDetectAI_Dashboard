@@ -793,7 +793,7 @@ def get_css(lang, theme_settings=None):
        RESPONSIVE DESIGN FOR MOBILE DEVICES
        ============================================ */
     
-    /* Tablet and below (max-width: 768px) */
+    /* Tablet and below (max-width: 768px) - MOBILE ONLY */
     @media screen and (max-width: 768px) {{
         /* Main container - full width when sidebar is collapsed */
         .main .block-container {{
