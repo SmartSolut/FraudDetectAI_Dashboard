@@ -531,21 +531,13 @@ def get_css(lang, theme_settings=None):
     [data-testid="stSidebar"] > div {{ padding: 0.75rem !important; }}
     [data-testid="stSidebar"] hr {{ margin: 0.5rem 0; }}
     
-    /* CRITICAL: Ensure sidebar is visible on desktop */
+    /* CRITICAL: Sidebar ALWAYS visible - NEVER hide it */
     [data-testid="stSidebar"] {{
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
-    }}
-    
-    /* Desktop: Sidebar normal size (min-width: 769px) */
-    @media screen and (min-width: 769px) {{
-        [data-testid="stSidebar"] {{
-            min-width: 21rem !important;
-            max-width: 21rem !important;
-            display: block !important;
-            visibility: visible !important;
-        }}
+        min-width: 21rem !important;
+        max-width: 21rem !important;
     }}
     
     .sidebar-header {{
@@ -816,10 +808,21 @@ def get_css(lang, theme_settings=None):
             margin-left: 0 !important;
         }}
         
-        /* Sidebar - smaller on mobile but still visible */
+        /* Sidebar - smaller on mobile but ALWAYS visible - NEVER hide */
         [data-testid="stSidebar"] {{
             min-width: 180px !important;
             max-width: 200px !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }}
+        
+        /* Ensure sidebar never gets hidden on mobile */
+        [data-testid="stSidebar"][aria-expanded="false"] {{
+            min-width: 180px !important;
+            max-width: 200px !important;
+            display: block !important;
+            visibility: visible !important;
         }}
         
         /* Sidebar content - compact on mobile */
