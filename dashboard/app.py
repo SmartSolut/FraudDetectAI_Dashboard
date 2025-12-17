@@ -531,7 +531,7 @@ def get_css(lang, theme_settings=None):
     [data-testid="stSidebar"] > div {{ padding: 0.75rem !important; }}
     [data-testid="stSidebar"] hr {{ margin: 0.5rem 0; }}
     
-    /* Hide hamburger button on desktop */
+    /* Hamburger button - hidden on desktop by default, shown on mobile via media query */
     button[kind="header"] {{
         display: none !important;
     }}
@@ -825,8 +825,10 @@ def get_css(lang, theme_settings=None):
             box-shadow: 2px 0 10px rgba(0,0,0,0.3) !important;
         }}
         
-        /* Hamburger menu button - visible on mobile */
-        button[kind="header"] {{
+        /* Hamburger menu button - ALWAYS visible on mobile */
+        button[kind="header"],
+        [data-testid="baseButton-header"],
+        [data-testid="stHeader"] button {{
             position: fixed !important;
             top: 10px !important;
             left: 10px !important;
@@ -841,6 +843,17 @@ def get_css(lang, theme_settings=None):
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }}
+        
+        /* Also target Streamlit's default sidebar toggle */
+        [data-testid="stHeader"] [data-testid="baseButton-header"],
+        [data-testid="stHeader"] button[aria-label*="menu"],
+        [data-testid="stHeader"] button[aria-label*="Menu"] {{
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }}
         
         /* Backdrop overlay when sidebar is open */
@@ -1064,11 +1077,16 @@ def get_css(lang, theme_settings=None):
             max-width: 100vw !important;
         }}
         
-        /* Hamburger button - larger on small screens */
-        button[kind="header"] {{
+        /* Hamburger button - larger on small screens, always visible */
+        button[kind="header"],
+        [data-testid="baseButton-header"],
+        [data-testid="stHeader"] button {{
             width: 50px !important;
             height: 50px !important;
             font-size: 1.3rem !important;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }}
         
         /* Metric cards - even smaller */
