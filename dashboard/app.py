@@ -1383,6 +1383,65 @@ theme_settings = {
 }
 st.markdown(get_css(st.session_state.language, theme_settings), unsafe_allow_html=True)
 
+# Custom Hamburger Menu Button for Mobile
+st.markdown("""
+<div id="custom-hamburger-menu" style="
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+    background: #2563eb;
+    color: white;
+    border-radius: 8px;
+    width: 45px;
+    height: 45px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+@media screen and (max-width: 768px) {
+    #custom-hamburger-menu {
+        display: flex !important;
+    }
+}
+</style>
+<div id="custom-hamburger-menu" onclick="toggleSidebar()">☰</div>
+<script>
+function toggleSidebar() {
+    const sidebar = document.querySelector('[data-testid="stSidebar"]');
+    const button = document.querySelector('[data-testid="baseButton-header"]');
+    if (sidebar) {
+        const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
+        if (isExpanded) {
+            sidebar.setAttribute('aria-expanded', 'false');
+            if (button) button.click();
+        } else {
+            sidebar.setAttribute('aria-expanded', 'true');
+            if (button) button.click();
+        }
+    } else if (button) {
+        button.click();
+    }
+}
+// Show button on mobile
+if (window.innerWidth <= 768) {
+    document.getElementById('custom-hamburger-menu').style.display = 'flex';
+}
+window.addEventListener('resize', function() {
+    const menu = document.getElementById('custom-hamburger-menu');
+    if (window.innerWidth <= 768) {
+        menu.style.display = 'flex';
+    } else {
+        menu.style.display = 'none';
+    }
+});
+</script>
+""", unsafe_allow_html=True)
+
 
 # ============================================================================
 # Language Helper
