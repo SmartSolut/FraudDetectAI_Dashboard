@@ -1385,7 +1385,8 @@ st.markdown(get_css(st.session_state.language, theme_settings), unsafe_allow_htm
 
 # Custom Hamburger Menu Button for Mobile
 st.markdown("""
-<div id="custom-hamburger-menu" style="
+<style>
+#custom-hamburger-menu {
     position: fixed;
     top: 10px;
     left: 10px;
@@ -1402,6 +1403,11 @@ st.markdown("""
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     font-size: 1.5rem;
     font-weight: bold;
+    transition: all 0.3s ease;
+}
+#custom-hamburger-menu:hover {
+    background: #1d4ed8;
+    transform: scale(1.05);
 }
 @media screen and (max-width: 768px) {
     #custom-hamburger-menu {
@@ -1414,29 +1420,29 @@ st.markdown("""
 function toggleSidebar() {
     const sidebar = document.querySelector('[data-testid="stSidebar"]');
     const button = document.querySelector('[data-testid="baseButton-header"]');
-    if (sidebar) {
-        const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
-        if (isExpanded) {
-            sidebar.setAttribute('aria-expanded', 'false');
-            if (button) button.click();
-        } else {
-            sidebar.setAttribute('aria-expanded', 'true');
-            if (button) button.click();
-        }
-    } else if (button) {
+    if (button) {
         button.click();
+    } else if (sidebar) {
+        const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
+        sidebar.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
     }
 }
-// Show button on mobile
-if (window.innerWidth <= 768) {
-    document.getElementById('custom-hamburger-menu').style.display = 'flex';
-}
+// Show button on mobile on page load
+setTimeout(function() {
+    if (window.innerWidth <= 768) {
+        const menu = document.getElementById('custom-hamburger-menu');
+        if (menu) menu.style.display = 'flex';
+    }
+}, 100);
+// Show/hide on resize
 window.addEventListener('resize', function() {
     const menu = document.getElementById('custom-hamburger-menu');
-    if (window.innerWidth <= 768) {
-        menu.style.display = 'flex';
-    } else {
-        menu.style.display = 'none';
+    if (menu) {
+        if (window.innerWidth <= 768) {
+            menu.style.display = 'flex';
+        } else {
+            menu.style.display = 'none';
+        }
     }
 });
 </script>
