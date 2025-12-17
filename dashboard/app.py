@@ -532,9 +532,7 @@ def get_css(lang, theme_settings=None):
     [data-testid="stSidebar"] hr {{ margin: 0.5rem 0; }}
     
     /* Hamburger button - hidden on desktop by default, shown on mobile via media query */
-    button[kind="header"] {{
-        display: none !important;
-    }}
+    /* Sidebar works normally - Streamlit handles it */
     
     .sidebar-header {{
         background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
