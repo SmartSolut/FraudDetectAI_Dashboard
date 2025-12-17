@@ -523,15 +523,18 @@ def get_css(lang, theme_settings=None):
     
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
     
-    /* Sidebar - Dynamic Theme */
+    /* Sidebar - Dynamic Theme (Desktop) */
     [data-testid="stSidebar"] {{ 
         background: var(--card); 
         border-right: 1px solid var(--border);
-        display: block !important;
-        visibility: visible !important;
     }}
     [data-testid="stSidebar"] > div {{ padding: 0.75rem !important; }}
     [data-testid="stSidebar"] hr {{ margin: 0.5rem 0; }}
+    
+    /* Hide hamburger button on desktop */
+    button[kind="header"] {{
+        display: none !important;
+    }}
     
     .sidebar-header {{
         background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
@@ -801,23 +804,62 @@ def get_css(lang, theme_settings=None):
             margin-left: 0 !important;
         }}
         
-        /* Sidebar - smaller and compact on mobile, always visible */
+        /* Sidebar - hidden by default on mobile, show as overlay when opened */
         [data-testid="stSidebar"] {{
-            min-width: 180px !important;
-            max-width: 200px !important;
-            padding: 0.5rem !important;
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: relative !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
+            z-index: 999 !important;
+            min-width: 0 !important;
+            max-width: 0 !important;
+            overflow: hidden !important;
+            transition: all 0.3s ease !important;
+            box-shadow: none !important;
         }}
         
-        /* Force sidebar to be visible even when collapsed */
-        [data-testid="stSidebar"][aria-expanded="false"] {{
-            min-width: 180px !important;
-            max-width: 200px !important;
-            display: block !important;
-            visibility: visible !important;
+        /* Show sidebar when expanded (hamburger menu clicked) */
+        [data-testid="stSidebar"][aria-expanded="true"] {{
+            min-width: 250px !important;
+            max-width: 280px !important;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3) !important;
+        }}
+        
+        /* Hamburger menu button - visible on mobile */
+        button[kind="header"] {{
+            position: fixed !important;
+            top: 10px !important;
+            left: 10px !important;
+            z-index: 1000 !important;
+            background: var(--primary) !important;
+            color: white !important;
+            border-radius: 8px !important;
+            width: 45px !important;
+            height: 45px !important;
+            min-width: 45px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }}
+        
+        /* Backdrop overlay when sidebar is open */
+        [data-testid="stSidebar"][aria-expanded="true"]::after {{
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            pointer-events: auto;
+        }}
+        
+        /* Main content - full width when sidebar is hidden */
+        [data-testid="stAppViewContainer"] > div:first-child {{
+            margin-left: 0 !important;
+            width: 100% !important;
         }}
         
         /* Sidebar content - compact on mobile */
@@ -1016,24 +1058,17 @@ def get_css(lang, theme_settings=None):
             padding: 0.4rem 0.5rem 0 0.5rem !important;
         }}
         
-        /* Sidebar - very compact on small phones */
-        [data-testid="stSidebar"] {{
-            min-width: 160px !important;
-            max-width: 180px !important;
-            padding: 0.4rem !important;
+        /* Sidebar - full width overlay on very small phones when opened */
+        [data-testid="stSidebar"][aria-expanded="true"] {{
+            min-width: 100vw !important;
+            max-width: 100vw !important;
         }}
         
-        [data-testid="stSidebar"] .sidebar-header h1 {{
-            font-size: 1.1rem !important;
-        }}
-        
-        [data-testid="stSidebar"] .sidebar-header h2 {{
-            font-size: 0.7rem !important;
-        }}
-        
-        [data-testid="stSidebar"] .stRadio label {{
-            padding: 0.25rem 0.4rem !important;
-            font-size: 0.75rem !important;
+        /* Hamburger button - larger on small screens */
+        button[kind="header"] {{
+            width: 50px !important;
+            height: 50px !important;
+            font-size: 1.3rem !important;
         }}
         
         /* Metric cards - even smaller */
