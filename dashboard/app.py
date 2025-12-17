@@ -531,8 +531,22 @@ def get_css(lang, theme_settings=None):
     [data-testid="stSidebar"] > div {{ padding: 0.75rem !important; }}
     [data-testid="stSidebar"] hr {{ margin: 0.5rem 0; }}
     
-    /* Hamburger button - hidden on desktop by default, shown on mobile via media query */
-    /* Sidebar works normally - Streamlit handles it */
+    /* CRITICAL: Ensure sidebar is visible on desktop */
+    [data-testid="stSidebar"] {{
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }}
+    
+    /* Desktop: Sidebar normal size (min-width: 769px) */
+    @media screen and (min-width: 769px) {{
+        [data-testid="stSidebar"] {{
+            min-width: 21rem !important;
+            max-width: 21rem !important;
+            display: block !important;
+            visibility: visible !important;
+        }}
+    }}
     
     .sidebar-header {{
         background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
