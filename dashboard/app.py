@@ -524,7 +524,12 @@ def get_css(lang, theme_settings=None):
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
     
     /* Sidebar - Dynamic Theme */
-    [data-testid="stSidebar"] {{ background: var(--card); border-right: 1px solid var(--border); }}
+    [data-testid="stSidebar"] {{ 
+        background: var(--card); 
+        border-right: 1px solid var(--border);
+        display: block !important;
+        visibility: visible !important;
+    }}
     [data-testid="stSidebar"] > div {{ padding: 0.75rem !important; }}
     [data-testid="stSidebar"] hr {{ margin: 0.5rem 0; }}
     
@@ -796,11 +801,23 @@ def get_css(lang, theme_settings=None):
             margin-left: 0 !important;
         }}
         
-        /* Sidebar - smaller and compact on mobile */
+        /* Sidebar - smaller and compact on mobile, always visible */
         [data-testid="stSidebar"] {{
             min-width: 180px !important;
             max-width: 200px !important;
             padding: 0.5rem !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+        }}
+        
+        /* Force sidebar to be visible even when collapsed */
+        [data-testid="stSidebar"][aria-expanded="false"] {{
+            min-width: 180px !important;
+            max-width: 200px !important;
+            display: block !important;
+            visibility: visible !important;
         }}
         
         /* Sidebar content - compact on mobile */
