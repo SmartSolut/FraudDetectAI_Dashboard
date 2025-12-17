@@ -796,27 +796,58 @@ def get_css(lang, theme_settings=None):
             margin-left: 0 !important;
         }}
         
-        /* Sidebar - responsive on mobile, normal on desktop */
+        /* Sidebar - smaller and compact on mobile */
         [data-testid="stSidebar"] {{
-            min-width: 200px !important;
-            max-width: 250px !important;
+            min-width: 180px !important;
+            max-width: 200px !important;
+            padding: 0.5rem !important;
         }}
         
-        /* When sidebar is collapsed on mobile, make main content full width */
-        [data-testid="stSidebar"][aria-expanded="false"] {{
-            min-width: 0 !important;
-            max-width: 0 !important;
+        /* Sidebar content - compact on mobile */
+        [data-testid="stSidebar"] > div {{
+            padding: 0.5rem !important;
         }}
         
-        /* Main content - responsive width */
-        [data-testid="stAppViewContainer"] > div:first-child {{
-            transition: margin-left 0.3s ease !important;
+        /* Sidebar header - smaller on mobile */
+        [data-testid="stSidebar"] .sidebar-header {{
+            padding: 0.5rem !important;
+            margin-bottom: 0.5rem !important;
         }}
         
-        /* When sidebar is collapsed, main content takes full width */
-        [data-testid="stSidebar"][aria-expanded="false"] ~ [data-testid="stAppViewContainer"] > div:first-child {{
+        [data-testid="stSidebar"] .sidebar-header h1 {{
+            font-size: 1.2rem !important;
+        }}
+        
+        [data-testid="stSidebar"] .sidebar-header h2 {{
+            font-size: 0.75rem !important;
+        }}
+        
+        /* Sidebar sections - compact */
+        [data-testid="stSidebar"] .sidebar-section {{
+            padding: 0.3rem 0.5rem !important;
+            margin: 0.3rem 0 !important;
+        }}
+        
+        [data-testid="stSidebar"] .sidebar-section h3 {{
+            font-size: 0.75rem !important;
+        }}
+        
+        /* Radio buttons - smaller on mobile */
+        [data-testid="stSidebar"] .stRadio label {{
+            padding: 0.3rem 0.5rem !important;
+            font-size: 0.8rem !important;
+            margin: 1px 0 !important;
+        }}
+        
+        /* Main content - adjust margin for smaller sidebar */
+        .main .block-container {{
             margin-left: 0 !important;
-            width: 100% !important;
+            padding-left: 0.5rem !important;
+        }}
+        
+        /* Ensure main content doesn't overlap */
+        [data-testid="stAppViewContainer"] > div:first-child {{
+            margin-left: 0 !important;
         }}
         
         /* Columns - stack vertically on mobile */
@@ -968,10 +999,24 @@ def get_css(lang, theme_settings=None):
             padding: 0.4rem 0.5rem 0 0.5rem !important;
         }}
         
-        /* Sidebar - smaller on very small screens */
-        [data-testid="stSidebar"][aria-expanded="true"] {{
-            min-width: 200px !important;
-            max-width: 220px !important;
+        /* Sidebar - very compact on small phones */
+        [data-testid="stSidebar"] {{
+            min-width: 160px !important;
+            max-width: 180px !important;
+            padding: 0.4rem !important;
+        }}
+        
+        [data-testid="stSidebar"] .sidebar-header h1 {{
+            font-size: 1.1rem !important;
+        }}
+        
+        [data-testid="stSidebar"] .sidebar-header h2 {{
+            font-size: 0.7rem !important;
+        }}
+        
+        [data-testid="stSidebar"] .stRadio label {{
+            padding: 0.25rem 0.4rem !important;
+            font-size: 0.75rem !important;
         }}
         
         /* Metric cards - even smaller */
