@@ -51,6 +51,7 @@ Thumbs.db
 !models/evaluation_reports/*.csv
 !models/evaluation_reports/*.json
 !models/figures/*.csv
+!data/processed/paysim_features_sample.parquet
 
 # Model files (if too large)
 # *.pkl
