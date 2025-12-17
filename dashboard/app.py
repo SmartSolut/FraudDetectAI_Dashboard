@@ -804,75 +804,10 @@ def get_css(lang, theme_settings=None):
             margin-left: 0 !important;
         }}
         
-        /* Sidebar - hidden by default on mobile, show as overlay when opened */
+        /* Sidebar - smaller on mobile but still visible */
         [data-testid="stSidebar"] {{
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            height: 100vh !important;
-            z-index: 999 !important;
-            min-width: 0 !important;
-            max-width: 0 !important;
-            overflow: hidden !important;
-            transition: all 0.3s ease !important;
-            box-shadow: none !important;
-        }}
-        
-        /* Show sidebar when expanded (hamburger menu clicked) */
-        [data-testid="stSidebar"][aria-expanded="true"] {{
-            min-width: 250px !important;
-            max-width: 280px !important;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3) !important;
-        }}
-        
-        /* Hamburger menu button - ALWAYS visible on mobile */
-        button[kind="header"],
-        [data-testid="baseButton-header"],
-        [data-testid="stHeader"] button {{
-            position: fixed !important;
-            top: 10px !important;
-            left: 10px !important;
-            z-index: 1000 !important;
-            background: var(--primary) !important;
-            color: white !important;
-            border-radius: 8px !important;
-            width: 45px !important;
-            height: 45px !important;
-            min-width: 45px !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }}
-        
-        /* Also target Streamlit's default sidebar toggle */
-        [data-testid="stHeader"] [data-testid="baseButton-header"],
-        [data-testid="stHeader"] button[aria-label*="menu"],
-        [data-testid="stHeader"] button[aria-label*="Menu"] {{
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }}
-        
-        /* Backdrop overlay when sidebar is open */
-        [data-testid="stSidebar"][aria-expanded="true"]::after {{
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
-            pointer-events: auto;
-        }}
-        
-        /* Main content - full width when sidebar is hidden */
-        [data-testid="stAppViewContainer"] > div:first-child {{
-            margin-left: 0 !important;
-            width: 100% !important;
+            min-width: 180px !important;
+            max-width: 200px !important;
         }}
         
         /* Sidebar content - compact on mobile */
@@ -1071,22 +1006,10 @@ def get_css(lang, theme_settings=None):
             padding: 0.4rem 0.5rem 0 0.5rem !important;
         }}
         
-        /* Sidebar - full width overlay on very small phones when opened */
-        [data-testid="stSidebar"][aria-expanded="true"] {{
-            min-width: 100vw !important;
-            max-width: 100vw !important;
-        }}
-        
-        /* Hamburger button - larger on small screens, always visible */
-        button[kind="header"],
-        [data-testid="baseButton-header"],
-        [data-testid="stHeader"] button {{
-            width: 50px !important;
-            height: 50px !important;
-            font-size: 1.3rem !important;
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
+        /* Sidebar - smaller on very small phones */
+        [data-testid="stSidebar"] {{
+            min-width: 160px !important;
+            max-width: 180px !important;
         }}
         
         /* Metric cards - even smaller */
@@ -1383,70 +1306,7 @@ theme_settings = {
 }
 st.markdown(get_css(st.session_state.language, theme_settings), unsafe_allow_html=True)
 
-# Custom Hamburger Menu Button for Mobile
-st.markdown("""
-<style>
-#custom-hamburger-menu {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1001;
-    background: #2563eb;
-    color: white;
-    border-radius: 8px;
-    width: 45px;
-    height: 45px;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    font-size: 1.5rem;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-#custom-hamburger-menu:hover {
-    background: #1d4ed8;
-    transform: scale(1.05);
-}
-@media screen and (max-width: 768px) {
-    #custom-hamburger-menu {
-        display: flex !important;
-    }
-}
-</style>
-<div id="custom-hamburger-menu" onclick="toggleSidebar()">☰</div>
-<script>
-function toggleSidebar() {
-    const sidebar = document.querySelector('[data-testid="stSidebar"]');
-    const button = document.querySelector('[data-testid="baseButton-header"]');
-    if (button) {
-        button.click();
-    } else if (sidebar) {
-        const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
-        sidebar.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-    }
-}
-// Show button on mobile on page load
-setTimeout(function() {
-    if (window.innerWidth <= 768) {
-        const menu = document.getElementById('custom-hamburger-menu');
-        if (menu) menu.style.display = 'flex';
-    }
-}, 100);
-// Show/hide on resize
-window.addEventListener('resize', function() {
-    const menu = document.getElementById('custom-hamburger-menu');
-    if (menu) {
-        if (window.innerWidth <= 768) {
-            menu.style.display = 'flex';
-        } else {
-            menu.style.display = 'none';
-        }
-    }
-});
-</script>
-""", unsafe_allow_html=True)
+# Removed custom hamburger menu - using Streamlit's default
 
 
 # ============================================================================
