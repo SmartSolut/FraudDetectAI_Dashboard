@@ -395,6 +395,126 @@ def get_css(lang, theme_settings=None):
         margin: 0 auto;
     }}
     
+    /* Responsive Design for Mobile */
+    @media screen and (max-width: 768px) {{
+        .main .block-container {{
+            padding: 0.5rem 0.75rem 0 0.75rem !important;
+            max-width: 100% !important;
+        }}
+        
+        /* Sidebar adjustments */
+        [data-testid="stSidebar"] {{
+            min-width: 200px !important;
+            max-width: 250px !important;
+        }}
+        
+        /* Metric cards - stack vertically on mobile */
+        [data-testid="stHorizontalBlock"] {{
+            flex-direction: column !important;
+        }}
+        
+        .metric-card {{
+            margin-bottom: 0.5rem !important;
+            width: 100% !important;
+        }}
+        
+        /* Header adjustments */
+        .main-header {{
+            font-size: calc(1.2rem * var(--font-mult)) !important;
+            padding: 0.3rem 0 !important;
+        }}
+        
+        /* Alert cards - full width */
+        .alert-card {{
+            flex-direction: column !important;
+            text-align: center !important;
+            padding: 0.75rem !important;
+        }}
+        
+        /* Feature items - full width */
+        .feature-item {{
+            padding: 0.5rem !important;
+            font-size: 0.85rem !important;
+        }}
+        
+        /* Step boxes - full width */
+        .step-box {{
+            padding: 0.5rem !important;
+            margin: 0.25rem 0 !important;
+        }}
+        
+        /* Fraud/Normal boxes - full width */
+        .fraud-box, .normal-box {{
+            padding: 0.75rem !important;
+            margin: 0.5rem 0 !important;
+        }}
+        
+        /* Sidebar header - smaller on mobile */
+        .sidebar-header h1 {{
+            font-size: calc(1.3rem * var(--font-mult)) !important;
+        }}
+        
+        .sidebar-header h2 {{
+            font-size: calc(0.75rem * var(--font-mult)) !important;
+        }}
+        
+        /* Info cards - full width */
+        .info-card {{
+            padding: 0.5rem !important;
+            margin: 0.4rem 0 !important;
+        }}
+        
+        /* Buttons - full width on mobile */
+        .stButton > button {{
+            width: 100% !important;
+        }}
+        
+        /* Charts - responsive */
+        .js-plotly-plot {{
+            width: 100% !important;
+            height: auto !important;
+        }}
+        
+        /* Tables - scrollable on mobile */
+        [data-testid="stDataFrame"] {{
+            overflow-x: auto !important;
+        }}
+        
+        /* Columns - stack on mobile */
+        [data-testid="column"] {{
+            width: 100% !important;
+            margin-bottom: 0.5rem !important;
+        }}
+    }}
+    
+    /* Extra small devices (phones) */
+    @media screen and (max-width: 480px) {{
+        .main .block-container {{
+            padding: 0.4rem 0.5rem 0 0.5rem !important;
+        }}
+        
+        .metric-card h3 {{
+            font-size: calc(1rem * var(--font-mult)) !important;
+        }}
+        
+        .metric-card p {{
+            font-size: calc(0.7rem * var(--font-mult)) !important;
+        }}
+        
+        .main-header {{
+            font-size: calc(1rem * var(--font-mult)) !important;
+        }}
+        
+        .sidebar-header h1 {{
+            font-size: calc(1.1rem * var(--font-mult)) !important;
+        }}
+        
+        /* Hide sidebar on very small screens (optional) */
+        [data-testid="stSidebar"] {{
+            min-width: 180px !important;
+        }}
+    }}
+    
     /* Remove ALL bottom space */
     .main {{ padding-bottom: 0 !important; margin-bottom: 0 !important; }}
     [data-testid="stVerticalBlock"] {{ padding-bottom: 0 !important; margin-bottom: 0 !important; }}
@@ -662,6 +782,272 @@ def get_css(lang, theme_settings=None):
     
     /* Better label visibility */
     label {{ font-size: 0.9rem !important; font-weight: 500 !important; color: var(--text) !important; }}
+    
+    /* ============================================
+       RESPONSIVE DESIGN FOR MOBILE DEVICES
+       ============================================ */
+    
+    /* Tablet and below (max-width: 768px) */
+    @media screen and (max-width: 768px) {{
+        /* Main container */
+        .main .block-container {{
+            padding: 0.5rem 0.75rem 0 0.75rem !important;
+            max-width: 100% !important;
+        }}
+        
+        /* Sidebar adjustments */
+        [data-testid="stSidebar"] {{
+            min-width: 200px !important;
+            max-width: 250px !important;
+        }}
+        
+        /* Columns - stack vertically on mobile */
+        [data-testid="stHorizontalBlock"] {{
+            flex-direction: column !important;
+        }}
+        
+        [data-testid="column"] {{
+            width: 100% !important;
+            margin-bottom: 0.5rem !important;
+        }}
+        
+        /* Metric cards - full width */
+        .metric-card {{
+            margin-bottom: 0.5rem !important;
+            width: 100% !important;
+            padding: 0.5rem 0.4rem !important;
+        }}
+        
+        .metric-card h3 {{
+            font-size: calc(1rem * var(--font-mult)) !important;
+        }}
+        
+        .metric-card p {{
+            font-size: calc(0.7rem * var(--font-mult)) !important;
+        }}
+        
+        /* Header adjustments */
+        .main-header {{
+            font-size: calc(1.2rem * var(--font-mult)) !important;
+            padding: 0.3rem 0 !important;
+        }}
+        
+        /* Hero banner - responsive */
+        .hero-banner {{
+            flex-direction: column !important;
+            padding: 0.75rem !important;
+            gap: 0.5rem !important;
+        }}
+        
+        .hero-banner h1 {{
+            font-size: calc(1.1rem * var(--font-mult)) !important;
+        }}
+        
+        .hero-banner p {{
+            font-size: calc(0.8rem * var(--font-mult)) !important;
+        }}
+        
+        /* Alert cards - full width, stacked */
+        .alert-card {{
+            flex-direction: column !important;
+            text-align: center !important;
+            padding: 0.75rem !important;
+            margin: 0.5rem 0 !important;
+        }}
+        
+        /* Feature cards - full width */
+        .feature-card {{
+            margin-bottom: 0.5rem !important;
+            width: 100% !important;
+        }}
+        
+        /* Feature items - full width */
+        .feature-item {{
+            padding: 0.5rem !important;
+            font-size: 0.85rem !important;
+            margin: 0.25rem 0 !important;
+        }}
+        
+        /* Step boxes - full width */
+        .step-box {{
+            padding: 0.5rem !important;
+            margin: 0.25rem 0 !important;
+        }}
+        
+        /* Fraud/Normal boxes - full width */
+        .fraud-box, .normal-box {{
+            padding: 0.75rem !important;
+            margin: 0.5rem 0 !important;
+        }}
+        
+        .fraud-box h2, .normal-box h2 {{
+            font-size: 1rem !important;
+        }}
+        
+        .fraud-box p, .normal-box p {{
+            font-size: 0.85rem !important;
+        }}
+        
+        /* Sidebar header - smaller on mobile */
+        .sidebar-header {{
+            padding: 0.6rem !important;
+        }}
+        
+        .sidebar-header h1 {{
+            font-size: calc(1.3rem * var(--font-mult)) !important;
+        }}
+        
+        .sidebar-header h2 {{
+            font-size: calc(0.75rem * var(--font-mult)) !important;
+        }}
+        
+        /* Info cards - full width */
+        .info-card {{
+            padding: 0.5rem !important;
+            margin: 0.4rem 0 !important;
+        }}
+        
+        /* Buttons - full width on mobile */
+        .stButton > button {{
+            width: 100% !important;
+            padding: 0.6rem 1rem !important;
+            font-size: calc(0.9rem * var(--font-mult)) !important;
+        }}
+        
+        /* Charts - responsive */
+        .js-plotly-plot {{
+            width: 100% !important;
+            height: auto !important;
+        }}
+        
+        /* Tables - scrollable on mobile */
+        [data-testid="stDataFrame"] {{
+            overflow-x: auto !important;
+            font-size: 0.75rem !important;
+        }}
+        
+        /* Text sizes - smaller on mobile */
+        h1 {{ font-size: 1.1rem !important; }}
+        h2 {{ font-size: 1rem !important; }}
+        h3 {{ font-size: 0.95rem !important; }}
+        p, li {{ font-size: 0.9rem !important; }}
+        
+        /* Inputs - full width */
+        .stTextInput, .stNumberInput, .stSelectbox, .stSlider {{
+            width: 100% !important;
+        }}
+        
+        /* Status boxes - full width */
+        .stSuccess, .stInfo, .stWarning, .stError {{
+            padding: 0.4rem 0.6rem !important;
+            font-size: 0.85rem !important;
+        }}
+    }}
+    
+    /* Extra small devices (phones, max-width: 480px) */
+    @media screen and (max-width: 480px) {{
+        .main .block-container {{
+            padding: 0.4rem 0.5rem 0 0.5rem !important;
+        }}
+        
+        /* Sidebar - smaller */
+        [data-testid="stSidebar"] {{
+            min-width: 180px !important;
+            max-width: 200px !important;
+        }}
+        
+        /* Metric cards - even smaller */
+        .metric-card {{
+            padding: 0.4rem 0.3rem !important;
+        }}
+        
+        .metric-card h3 {{
+            font-size: calc(0.9rem * var(--font-mult)) !important;
+        }}
+        
+        .metric-card p {{
+            font-size: calc(0.65rem * var(--font-mult)) !important;
+        }}
+        
+        .metric-card .icon {{
+            font-size: calc(1.2rem * var(--font-mult)) !important;
+        }}
+        
+        /* Header - smaller */
+        .main-header {{
+            font-size: calc(1rem * var(--font-mult)) !important;
+        }}
+        
+        /* Hero banner - compact */
+        .hero-banner {{
+            padding: 0.6rem !important;
+        }}
+        
+        .hero-banner h1 {{
+            font-size: calc(1rem * var(--font-mult)) !important;
+        }}
+        
+        .hero-banner p {{
+            font-size: calc(0.75rem * var(--font-mult)) !important;
+        }}
+        
+        .hero-banner .hero-icon {{
+            font-size: calc(1.5rem * var(--font-mult)) !important;
+        }}
+        
+        /* Sidebar header - very small */
+        .sidebar-header h1 {{
+            font-size: calc(1.1rem * var(--font-mult)) !important;
+        }}
+        
+        .sidebar-header h2 {{
+            font-size: calc(0.7rem * var(--font-mult)) !important;
+        }}
+        
+        /* Buttons - compact */
+        .stButton > button {{
+            padding: 0.5rem 0.75rem !important;
+            font-size: calc(0.85rem * var(--font-mult)) !important;
+        }}
+        
+        /* Text - smaller */
+        h1 {{ font-size: 1rem !important; }}
+        h2 {{ font-size: 0.95rem !important; }}
+        h3 {{ font-size: 0.9rem !important; }}
+        p, li {{ font-size: 0.85rem !important; }}
+        
+        /* Tables - very small */
+        [data-testid="stDataFrame"] {{
+            font-size: 0.7rem !important;
+        }}
+        
+        /* Feature items - compact */
+        .feature-item {{
+            padding: 0.4rem !important;
+            font-size: 0.8rem !important;
+        }}
+        
+        /* Step boxes - compact */
+        .step-box {{
+            padding: 0.4rem !important;
+        }}
+        
+        /* Info cards - compact */
+        .info-card {{
+            padding: 0.4rem !important;
+        }}
+    }}
+    
+    /* Landscape orientation on mobile */
+    @media screen and (max-width: 768px) and (orientation: landscape) {{
+        .main .block-container {{
+            padding: 0.4rem 0.6rem 0 0.6rem !important;
+        }}
+        
+        [data-testid="stSidebar"] {{
+            min-width: 180px !important;
+        }}
+    }}
     
     /* Hero Banner - Dynamic Theme */
     .hero-banner {{
