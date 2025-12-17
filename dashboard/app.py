@@ -284,7 +284,7 @@ st.set_page_config(
     page_title="🔍 Fraud Detection Dashboard",
     page_icon="🔍",
     layout="wide",
-    initial_sidebar_state="collapsed"  # Collapsed by default for mobile
+    initial_sidebar_state="expanded"  # Expanded on desktop, responsive on mobile
 )
 
 # ============================================================================
@@ -796,70 +796,27 @@ def get_css(lang, theme_settings=None):
             margin-left: 0 !important;
         }}
         
-        /* Sidebar - collapsed by default on mobile */
+        /* Sidebar - responsive on mobile, normal on desktop */
         [data-testid="stSidebar"] {{
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            height: 100vh !important;
-            z-index: 999 !important;
+            min-width: 200px !important;
+            max-width: 250px !important;
+        }}
+        
+        /* When sidebar is collapsed on mobile, make main content full width */
+        [data-testid="stSidebar"][aria-expanded="false"] {{
             min-width: 0 !important;
             max-width: 0 !important;
-            overflow: hidden !important;
-            transition: all 0.3s ease !important;
         }}
         
-        /* Show sidebar when expanded */
-        [data-testid="stSidebar"][aria-expanded="true"] {{
-            min-width: 250px !important;
-            max-width: 280px !important;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3) !important;
-        }}
-        
-        /* Main content - full width on mobile */
+        /* Main content - responsive width */
         [data-testid="stAppViewContainer"] > div:first-child {{
-            width: 100% !important;
+            transition: margin-left 0.3s ease !important;
+        }}
+        
+        /* When sidebar is collapsed, main content takes full width */
+        [data-testid="stSidebar"][aria-expanded="false"] ~ [data-testid="stAppViewContainer"] > div:first-child {{
             margin-left: 0 !important;
-            padding-left: 0 !important;
-        }}
-        
-        /* Sidebar toggle button - floating button on mobile */
-        button[kind="header"] {{
-            position: fixed !important;
-            top: 10px !important;
-            left: 10px !important;
-            z-index: 1000 !important;
-            background: var(--primary) !important;
-            color: white !important;
-            border-radius: 50% !important;
-            width: 45px !important;
-            height: 45px !important;
-            min-width: 45px !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }}
-        
-        /* Add backdrop when sidebar is open */
-        [data-testid="stSidebar"][aria-expanded="true"] ~ * {{
-            position: relative;
-        }}
-        
-        /* Backdrop overlay */
-        .sidebar-backdrop {{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
-            display: none;
-        }}
-        
-        [data-testid="stSidebar"][aria-expanded="true"] + .sidebar-backdrop {{
-            display: block;
+            width: 100% !important;
         }}
         
         /* Columns - stack vertically on mobile */
@@ -1011,17 +968,10 @@ def get_css(lang, theme_settings=None):
             padding: 0.4rem 0.5rem 0 0.5rem !important;
         }}
         
-        /* Sidebar - full width overlay on very small screens when opened */
+        /* Sidebar - smaller on very small screens */
         [data-testid="stSidebar"][aria-expanded="true"] {{
-            min-width: 100vw !important;
-            max-width: 100vw !important;
-        }}
-        
-        /* Sidebar toggle button - larger on small screens */
-        button[kind="header"] {{
-            width: 50px !important;
-            height: 50px !important;
-            font-size: 1.3rem !important;
+            min-width: 200px !important;
+            max-width: 220px !important;
         }}
         
         /* Metric cards - even smaller */
