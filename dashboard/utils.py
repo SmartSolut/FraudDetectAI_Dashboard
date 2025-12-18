@@ -85,20 +85,47 @@ def load_model(model_path=None):
 
 def load_model_by_name(model_name):
     """Load model by name"""
+    models_dir = BASE_DIR / 'models'
+    
     model_files = {
-        'Random Forest': BASE_DIR / 'models' / 'random_forest_model.pkl',
-        'XGBoost': BASE_DIR / 'models' / 'xgboost_model.pkl',
-        'Logistic Regression': BASE_DIR / 'models' / 'logistic_regression_model.pkl'
+        'Random Forest': 'random_forest_model.pkl',
+        'XGBoost': 'xgboost_model.pkl',
+        'Logistic Regression': 'logistic_regression_model.pkl'
     }
     
     if model_name in model_files:
-        model_path = model_files[model_name]
-        print(f"Attempting to load {model_name} from {model_path}")
-        model = load_model(model_path)
+        filename = model_files[model_name]
+        model_path = models_dir / filename
+        
+        # Try multiple possible paths
+        possible_paths = [
+            model_path,
+            BASE_DIR / 'models' / filename,
+            Path('models') / filename,
+            Path.cwd() / 'models' / filename,
+        ]
+        
+        actual_path = None
+        for path in possible_paths:
+            if path.exists():
+                actual_path = path
+                break
+        
+        if actual_path is None:
+            print(f"Model file not found for {model_name}")
+            print(f"Tried paths: {possible_paths}")
+            print(f"BASE_DIR: {BASE_DIR}")
+            print(f"models_dir exists: {models_dir.exists()}")
+            if models_dir.exists():
+                print(f"Files in models/: {list(models_dir.glob('*.pkl'))}")
+            return None
+        
+        print(f"Attempting to load {model_name} from {actual_path}")
+        model = load_model(actual_path)
         if model is None:
-            print(f"Failed to load {model_name}")
+            print(f"Failed to load {model_name} from {actual_path}")
         else:
-            print(f"Successfully loaded {model_name}")
+            print(f"Successfully loaded {model_name} (type: {type(model).__name__})")
         return model
     else:
         print(f"Unknown model name: {model_name}")
