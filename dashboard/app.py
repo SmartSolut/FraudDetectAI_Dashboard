@@ -531,13 +531,33 @@ def get_css(lang, theme_settings=None):
     [data-testid="stSidebar"] > div {{ padding: 0.75rem !important; }}
     [data-testid="stSidebar"] hr {{ margin: 0.5rem 0; }}
     
-    /* CRITICAL: Sidebar ALWAYS visible - NEVER hide it */
-    [data-testid="stSidebar"] {{
+    /* CRITICAL: Sidebar ALWAYS visible - NEVER hide it - FORCE IT */
+    [data-testid="stSidebar"],
+    section[data-testid="stSidebar"],
+    div[data-testid="stSidebar"] {{
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
         min-width: 21rem !important;
         max-width: 21rem !important;
+        width: 21rem !important;
+        position: relative !important;
+        transform: none !important;
+        left: 0 !important;
+        right: auto !important;
+    }}
+    
+    /* Force sidebar to be visible even if Streamlit tries to hide it */
+    [data-testid="stSidebar"][aria-expanded="false"],
+    [data-testid="stSidebar"][aria-expanded="true"],
+    [data-testid="stSidebar"].css-1d391kg,
+    [data-testid="stSidebar"].css-1lcbmhc {{
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-width: 21rem !important;
+        max-width: 21rem !important;
+        width: 21rem !important;
     }}
     
     .sidebar-header {{
