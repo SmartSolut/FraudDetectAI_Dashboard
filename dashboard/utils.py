@@ -10,10 +10,23 @@ import joblib
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 # Resolve project root (one level above dashboard/)
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Alternative paths for different deployment scenarios
+POSSIBLE_BASE_DIRS = [
+    BASE_DIR,  # Local development
+    Path(__file__).resolve().parent.parent.parent,  # If dashboard is nested deeper
+    Path.cwd(),  # Current working directory
+    Path.cwd().parent,  # Parent of current directory
+]
+
+# Find the correct base directory by checking for models folder
+for possible_dir in POSSIBLE_BASE_DIRS:
+    models_dir = possible_dir / 'models'
+    if models_dir.exists() and (models_dir / 'xgboost_model.pkl').exists():
+        BASE_DIR = possible_dir
+        break
 
 
 def load_model(model_path=None):
@@ -22,13 +35,47 @@ def load_model(model_path=None):
         model_path = BASE_DIR / 'models' / 'random_forest_model.pkl'
     else:
         model_path = Path(model_path)
+    
+    # Try absolute path first
+    if not model_path.exists() and not model_path.is_absolute():
+        # Try relative to BASE_DIR
+        alt_path = BASE_DIR / model_path
+        if alt_path.exists():
+            model_path = alt_path
+    
     try:
         if not model_path.exists():
             print(f"Model file not found: {model_path}")
+            print(f"BASE_DIR: {BASE_DIR}")
+            print(f"Current working directory: {Path.cwd()}")
+            # List available files in models directory
+            models_dir = BASE_DIR / 'models'
+            if models_dir.exists():
+                print(f"Available files in models/: {list(models_dir.glob('*.pkl'))}")
             return None
-        model = joblib.load(model_path)
-        print(f"Successfully loaded model from: {model_path}")
-        return model
+        
+        print(f"Loading model from: {model_path}")
+        print(f"File size: {model_path.stat().st_size} bytes")
+        
+        # Try loading with different methods
+        try:
+            model = joblib.load(model_path)
+            print(f"Successfully loaded model from: {model_path}")
+            print(f"Model type: {type(model).__name__}")
+            return model
+        except Exception as load_error:
+            # If joblib fails, try pickle directly
+            print(f"joblib.load failed: {load_error}")
+            try:
+                import pickle
+                with open(model_path, 'rb') as f:
+                    model = pickle.load(f)
+                print(f"Successfully loaded model using pickle from: {model_path}")
+                return model
+            except Exception as pickle_error:
+                print(f"pickle.load also failed: {pickle_error}")
+                raise load_error
+        
     except Exception as e:
         import traceback
         print(f"Error loading model from {model_path}: {e}")
