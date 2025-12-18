@@ -23,10 +23,16 @@ def load_model(model_path=None):
     else:
         model_path = Path(model_path)
     try:
+        if not model_path.exists():
+            print(f"Model file not found: {model_path}")
+            return None
         model = joblib.load(model_path)
+        print(f"Successfully loaded model from: {model_path}")
         return model
     except Exception as e:
-        print(f"Error loading model: {e}")
+        import traceback
+        print(f"Error loading model from {model_path}: {e}")
+        print(traceback.format_exc())
         return None
 
 
@@ -39,8 +45,17 @@ def load_model_by_name(model_name):
     }
     
     if model_name in model_files:
-        return load_model(model_files[model_name])
-    return None
+        model_path = model_files[model_name]
+        print(f"Attempting to load {model_name} from {model_path}")
+        model = load_model(model_path)
+        if model is None:
+            print(f"Failed to load {model_name}")
+        else:
+            print(f"Successfully loaded {model_name}")
+        return model
+    else:
+        print(f"Unknown model name: {model_name}")
+        return None
 
 
 def get_available_models():

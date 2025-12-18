@@ -1465,10 +1465,25 @@ with st.sidebar:
     # Load selected model
     if model_name != st.session_state.get('current_model_name'):
         from utils import load_model_by_name
-        st.session_state.model = load_model_by_name(model_name)
-        st.session_state.current_model_name = model_name
-        if st.session_state.model is not None:
-            st.success(f"✅ {model_name} loaded")
+        with st.spinner(f"Loading {model_name}..." if st.session_state.language == 'en' else f"جاري تحميل {model_name}..."):
+            st.session_state.model = load_model_by_name(model_name)
+            st.session_state.current_model_name = model_name
+            if st.session_state.model is not None:
+                st.success(f"✅ {model_name} loaded" if st.session_state.language == 'en' else f"✅ تم تحميل {model_name}")
+            else:
+                st.error(f"❌ Failed to load {model_name}" if st.session_state.language == 'en' else f"❌ فشل تحميل {model_name}")
+                # Try to load default model as fallback
+                if available_models:
+                    default_model = available_models[0]
+                    if default_model != model_name:
+                        st.warning(f"Loading default model: {default_model}" if st.session_state.language == 'en' else f"تحميل النموذج الافتراضي: {default_model}")
+                        st.session_state.model = load_model_by_name(default_model)
+                        st.session_state.current_model_name = default_model
+    elif st.session_state.model is None:
+        # If model is None but name is set, try to reload
+        from utils import load_model_by_name
+        with st.spinner(f"Reloading {model_name}..." if st.session_state.language == 'en' else f"إعادة تحميل {model_name}..."):
+            st.session_state.model = load_model_by_name(model_name)
     
     st.markdown("---")
     
