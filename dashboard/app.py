@@ -808,21 +808,33 @@ def get_css(lang, theme_settings=None):
             margin-left: 0 !important;
         }}
         
-        /* Sidebar - smaller on mobile but ALWAYS visible - NEVER hide */
+        /* Sidebar - smaller on mobile but ALWAYS fixed and visible - NEVER hide */
         [data-testid="stSidebar"] {{
             min-width: 180px !important;
             max-width: 200px !important;
+            width: 200px !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            flex-shrink: 0 !important;
+        }}
+        
+        /* Ensure sidebar never gets hidden or collapsed on mobile */
+        [data-testid="stSidebar"][aria-expanded="false"],
+        [data-testid="stSidebar"][aria-expanded="true"] {{
+            min-width: 180px !important;
+            max-width: 200px !important;
+            width: 200px !important;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
         }}
         
-        /* Ensure sidebar never gets hidden on mobile */
-        [data-testid="stSidebar"][aria-expanded="false"] {{
-            min-width: 180px !important;
-            max-width: 200px !important;
-            display: block !important;
-            visibility: visible !important;
+        /* Hide sidebar toggle button on mobile - sidebar always visible */
+        button[kind="header"],
+        [data-testid="baseButton-header"] {{
+            display: none !important;
         }}
         
         /* Sidebar content - compact on mobile */
