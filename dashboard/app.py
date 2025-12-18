@@ -1324,6 +1324,10 @@ def load_cached_recommendations():
 # ============================================================================
 if 'model' not in st.session_state:
     st.session_state.model = load_cached_model()
+    st.session_state.current_model_name = 'Random Forest'  # Default model name
+
+if 'current_model_name' not in st.session_state:
+    st.session_state.current_model_name = 'Random Forest'
 
 if 'data' not in st.session_state:
     st.session_state.data = load_cached_data()
