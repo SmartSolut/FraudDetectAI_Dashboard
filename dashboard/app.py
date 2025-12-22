@@ -1471,7 +1471,8 @@ with st.sidebar:
         from utils import load_model_by_name, get_available_models
         with st.spinner(f"Loading {model_name}..." if st.session_state.language == 'en' else f"جاري تحميل {model_name}..."):
             try:
-                st.session_state.model = load_model_by_name(model_name)
+                # Pass show_errors_in_streamlit=True to display debug info
+                st.session_state.model = load_model_by_name(model_name, show_errors_in_streamlit=True)
                 st.session_state.current_model_name = model_name
                 if st.session_state.model is not None:
                     st.success(f"✅ {model_name} loaded" if st.session_state.language == 'en' else f"✅ تم تحميل {model_name}")
@@ -1483,7 +1484,7 @@ with st.sidebar:
                         default_model = all_available[0]
                         if default_model != model_name:
                             st.warning(f"Loading default model: {default_model}" if st.session_state.language == 'en' else f"تحميل النموذج الافتراضي: {default_model}")
-                            st.session_state.model = load_model_by_name(default_model)
+                            st.session_state.model = load_model_by_name(default_model, show_errors_in_streamlit=True)
                             if st.session_state.model is not None:
                                 st.session_state.current_model_name = default_model
                                 st.session_state.selected_model = default_model
@@ -1491,6 +1492,7 @@ with st.sidebar:
                                 st.error(f"❌ Failed to load default model: {default_model}" if st.session_state.language == 'en' else f"❌ فشل تحميل النموذج الافتراضي: {default_model}")
             except Exception as e:
                 st.error(f"❌ Error loading {model_name}: {str(e)}" if st.session_state.language == 'en' else f"❌ خطأ في تحميل {model_name}: {str(e)}")
+                st.exception(e)
                 # Try to load default model as fallback
                 all_available = get_available_models()
                 if all_available:
@@ -1498,29 +1500,31 @@ with st.sidebar:
                     if default_model != model_name:
                         st.warning(f"Loading default model: {default_model}" if st.session_state.language == 'en' else f"تحميل النموذج الافتراضي: {default_model}")
                         try:
-                            st.session_state.model = load_model_by_name(default_model)
+                            st.session_state.model = load_model_by_name(default_model, show_errors_in_streamlit=True)
                             if st.session_state.model is not None:
                                 st.session_state.current_model_name = default_model
                                 st.session_state.selected_model = default_model
                         except Exception as e2:
                             st.error(f"❌ Failed to load default model: {str(e2)}" if st.session_state.language == 'en' else f"❌ فشل تحميل النموذج الافتراضي: {str(e2)}")
+                            st.exception(e2)
     elif st.session_state.model is None:
         # If model is None but name is set, try to reload
         from utils import load_model_by_name
         with st.spinner(f"Reloading {model_name}..." if st.session_state.language == 'en' else f"إعادة تحميل {model_name}..."):
             try:
-                st.session_state.model = load_model_by_name(model_name)
+                st.session_state.model = load_model_by_name(model_name, show_errors_in_streamlit=True)
                 if st.session_state.model is None:
                     # If still None, try default
                     from utils import get_available_models
                     all_available = get_available_models()
                     if all_available:
                         default_model = all_available[0]
-                        st.session_state.model = load_model_by_name(default_model)
+                        st.session_state.model = load_model_by_name(default_model, show_errors_in_streamlit=True)
                         st.session_state.current_model_name = default_model
                         st.session_state.selected_model = default_model
             except Exception as e:
                 st.error(f"❌ Error reloading model: {str(e)}" if st.session_state.language == 'en' else f"❌ خطأ في إعادة تحميل النموذج: {str(e)}")
+                st.exception(e)
     
     st.markdown("---")
     

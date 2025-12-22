@@ -118,16 +118,25 @@ def load_model(model_path=None):
         return None
 
 
-def load_model_by_name(model_name):
+def load_model_by_name(model_name, show_errors_in_streamlit=False):
     """Load model by name with enhanced error handling"""
+    import streamlit as st
+    
     # Check if XGBoost is available for XGBoost models
     if model_name == 'XGBoost':
         try:
             import xgboost
-            print(f"XGBoost version: {xgboost.__version__}")
+            version_info = f"XGBoost version: {xgboost.__version__}"
+            print(version_info)
+            if show_errors_in_streamlit:
+                st.info(version_info)
         except ImportError as e:
-            print(f"[ERROR] XGBoost library not installed: {e}")
+            error_msg = f"[ERROR] XGBoost library not installed: {e}"
+            print(error_msg)
             print("Please install XGBoost: pip install xgboost")
+            if show_errors_in_streamlit:
+                st.error(f"❌ XGBoost library not installed. Please check requirements.txt")
+                st.code("pip install xgboost", language="bash")
             return None
     
     models_dir = BASE_DIR / 'models'
@@ -167,22 +176,33 @@ def load_model_by_name(model_name):
                 continue
         
         if actual_path is None:
-            print(f"[ERROR] Model file not found for {model_name}")
-            print(f"Tried {len(possible_paths)} paths:")
+            error_details = []
+            error_details.append(f"[ERROR] Model file not found for {model_name}")
+            error_details.append(f"Tried {len(possible_paths)} paths:")
             for i, path in enumerate(possible_paths, 1):
                 try:
                     exists = path.exists() if hasattr(path, 'exists') else 'N/A'
-                    print(f"  {i}. {path} (exists: {exists})")
+                    error_details.append(f"  {i}. {path} (exists: {exists})")
                 except:
-                    print(f"  {i}. {path} (exists: N/A)")
-            print(f"BASE_DIR: {BASE_DIR} (exists: {BASE_DIR.exists()})")
-            print(f"models_dir: {models_dir} (exists: {models_dir.exists()})")
+                    error_details.append(f"  {i}. {path} (exists: N/A)")
+            error_details.append(f"BASE_DIR: {BASE_DIR} (exists: {BASE_DIR.exists()})")
+            error_details.append(f"models_dir: {models_dir} (exists: {models_dir.exists()})")
+            error_details.append(f"Current working directory: {Path.cwd()}")
+            
             if models_dir.exists():
                 try:
                     pkl_files = list(models_dir.glob('*.pkl'))
-                    print(f"Available .pkl files in models/: {[f.name for f in pkl_files]}")
+                    error_details.append(f"Available .pkl files in models/: {[f.name for f in pkl_files]}")
                 except Exception as e:
-                    print(f"Error listing files: {e}")
+                    error_details.append(f"Error listing files: {e}")
+            
+            error_msg = "\n".join(error_details)
+            print(error_msg)
+            
+            if show_errors_in_streamlit:
+                with st.expander("🔍 Debug Information", expanded=False):
+                    st.code(error_msg, language="text")
+            
             return None
         
         print(f"[LOADING] Attempting to load {model_name} from: {actual_path}")
@@ -191,21 +211,38 @@ def load_model_by_name(model_name):
         try:
             model = load_model(actual_path)
             if model is None:
-                print(f"[ERROR] Failed to load {model_name} from {actual_path}")
+                error_msg = f"[ERROR] Failed to load {model_name} from {actual_path}"
+                print(error_msg)
+                if show_errors_in_streamlit:
+                    st.error(f"❌ Failed to load model from file")
+                    with st.expander("🔍 Debug Information", expanded=False):
+                        st.code(f"Path: {actual_path}\nFile exists: {actual_path.exists() if actual_path else False}", language="text")
                 return None
             else:
                 model_type = type(model).__name__
-                print(f"[SUCCESS] Successfully loaded {model_name} (type: {model_type})")
+                success_msg = f"[SUCCESS] Successfully loaded {model_name} (type: {model_type})"
+                print(success_msg)
                 
                 # Verify model has required methods
                 if not hasattr(model, 'predict_proba'):
-                    print(f"[WARNING] Model {model_name} does not have predict_proba method")
+                    warning_msg = f"[WARNING] Model {model_name} does not have predict_proba method"
+                    print(warning_msg)
+                    if show_errors_in_streamlit:
+                        st.warning("⚠️ Model loaded but may not have all required methods")
                 
                 return model
         except Exception as e:
             import traceback
-            print(f"[ERROR] Exception loading {model_name}: {e}")
-            print(traceback.format_exc())
+            error_msg = f"[ERROR] Exception loading {model_name}: {e}"
+            traceback_str = traceback.format_exc()
+            print(error_msg)
+            print(traceback_str)
+            
+            if show_errors_in_streamlit:
+                st.error(f"❌ Error loading {model_name}: {str(e)}")
+                with st.expander("🔍 Full Error Details", expanded=False):
+                    st.code(traceback_str, language="python")
+            
             return None
     else:
         print(f"[ERROR] Unknown model name: {model_name}")
