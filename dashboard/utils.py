@@ -21,12 +21,28 @@ POSSIBLE_BASE_DIRS = [
     Path.cwd().parent,  # Parent of current directory
 ]
 
+# For Streamlit Cloud, also check common deployment paths
+try:
+    # Check if we're in Streamlit Cloud (usually runs from app root)
+    cwd = Path.cwd()
+    if (cwd / 'models').exists():
+        POSSIBLE_BASE_DIRS.insert(0, cwd)
+    if (cwd / 'dashboard').exists():
+        POSSIBLE_BASE_DIRS.insert(0, cwd)
+except Exception:
+    pass
+
 # Find the correct base directory by checking for models folder
+# Check for any .pkl file in models/ directory, not just xgboost
 for possible_dir in POSSIBLE_BASE_DIRS:
     models_dir = possible_dir / 'models'
-    if models_dir.exists() and (models_dir / 'xgboost_model.pkl').exists():
-        BASE_DIR = possible_dir
-        break
+    if models_dir.exists():
+        # Check if there are any model files
+        pkl_files = list(models_dir.glob('*.pkl'))
+        if pkl_files:
+            BASE_DIR = possible_dir
+            print(f"[INFO] Found models directory at: {BASE_DIR}")
+            break
 
 
 def load_model(model_path=None):
@@ -59,21 +75,40 @@ def load_model(model_path=None):
         
         # Try loading with different methods
         try:
+            # First try joblib (preferred method)
             model = joblib.load(model_path)
-            print(f"Successfully loaded model from: {model_path}")
-            print(f"Model type: {type(model).__name__}")
-            return model
+            print(f"[SUCCESS] Successfully loaded model using joblib from: {model_path}")
+            print(f"          Model type: {type(model).__name__}")
+            
+            # Verify it's a valid model
+            if hasattr(model, 'predict') or hasattr(model, 'predict_proba'):
+                return model
+            else:
+                print(f"[WARNING] Loaded object doesn't have predict/predict_proba methods")
+                return model  # Still return it, might work
+                
         except Exception as load_error:
             # If joblib fails, try pickle directly
-            print(f"joblib.load failed: {load_error}")
+            print(f"[WARNING] joblib.load failed: {load_error}")
+            print(f"          Trying pickle.load as fallback...")
             try:
                 import pickle
                 with open(model_path, 'rb') as f:
                     model = pickle.load(f)
-                print(f"Successfully loaded model using pickle from: {model_path}")
-                return model
+                print(f"[SUCCESS] Successfully loaded model using pickle from: {model_path}")
+                print(f"          Model type: {type(model).__name__}")
+                
+                # Verify it's a valid model
+                if hasattr(model, 'predict') or hasattr(model, 'predict_proba'):
+                    return model
+                else:
+                    print(f"[WARNING] Loaded object doesn't have predict/predict_proba methods")
+                    return model
+                    
             except Exception as pickle_error:
-                print(f"pickle.load also failed: {pickle_error}")
+                print(f"[ERROR] pickle.load also failed: {pickle_error}")
+                import traceback
+                print(traceback.format_exc())
                 raise load_error
         
     except Exception as e:
@@ -84,7 +119,17 @@ def load_model(model_path=None):
 
 
 def load_model_by_name(model_name):
-    """Load model by name"""
+    """Load model by name with enhanced error handling"""
+    # Check if XGBoost is available for XGBoost models
+    if model_name == 'XGBoost':
+        try:
+            import xgboost
+            print(f"XGBoost version: {xgboost.__version__}")
+        except ImportError as e:
+            print(f"[ERROR] XGBoost library not installed: {e}")
+            print("Please install XGBoost: pip install xgboost")
+            return None
+    
     models_dir = BASE_DIR / 'models'
     
     model_files = {
@@ -95,55 +140,116 @@ def load_model_by_name(model_name):
     
     if model_name in model_files:
         filename = model_files[model_name]
-        model_path = models_dir / filename
         
-        # Try multiple possible paths
+        # Try multiple possible paths - more comprehensive search
         possible_paths = [
-            model_path,
-            BASE_DIR / 'models' / filename,
-            Path('models') / filename,
-            Path.cwd() / 'models' / filename,
+            models_dir / filename,  # Standard path
+            BASE_DIR / 'models' / filename,  # Explicit BASE_DIR
+            Path(__file__).parent.parent / 'models' / filename,  # Relative to utils.py
+            Path.cwd() / 'models' / filename,  # Current working directory
+            Path.cwd() / filename,  # Direct in cwd
+            Path('models') / filename,  # Relative models
         ]
+        
+        # Also try absolute paths if BASE_DIR is set
+        if BASE_DIR.exists():
+            possible_paths.append(BASE_DIR.resolve() / 'models' / filename)
         
         actual_path = None
         for path in possible_paths:
-            if path.exists():
-                actual_path = path
-                break
+            try:
+                if path.exists() and path.is_file():
+                    actual_path = path.resolve()  # Use absolute path
+                    print(f"[OK] Found {model_name} at: {actual_path}")
+                    break
+            except Exception as e:
+                print(f"Error checking path {path}: {e}")
+                continue
         
         if actual_path is None:
-            print(f"Model file not found for {model_name}")
-            print(f"Tried paths: {possible_paths}")
-            print(f"BASE_DIR: {BASE_DIR}")
-            print(f"models_dir exists: {models_dir.exists()}")
+            print(f"[ERROR] Model file not found for {model_name}")
+            print(f"Tried {len(possible_paths)} paths:")
+            for i, path in enumerate(possible_paths, 1):
+                try:
+                    exists = path.exists() if hasattr(path, 'exists') else 'N/A'
+                    print(f"  {i}. {path} (exists: {exists})")
+                except:
+                    print(f"  {i}. {path} (exists: N/A)")
+            print(f"BASE_DIR: {BASE_DIR} (exists: {BASE_DIR.exists()})")
+            print(f"models_dir: {models_dir} (exists: {models_dir.exists()})")
             if models_dir.exists():
-                print(f"Files in models/: {list(models_dir.glob('*.pkl'))}")
+                try:
+                    pkl_files = list(models_dir.glob('*.pkl'))
+                    print(f"Available .pkl files in models/: {[f.name for f in pkl_files]}")
+                except Exception as e:
+                    print(f"Error listing files: {e}")
             return None
         
-        print(f"Attempting to load {model_name} from {actual_path}")
-        model = load_model(actual_path)
-        if model is None:
-            print(f"Failed to load {model_name} from {actual_path}")
-        else:
-            print(f"Successfully loaded {model_name} (type: {type(model).__name__})")
-        return model
+        print(f"[LOADING] Attempting to load {model_name} from: {actual_path}")
+        print(f"         File size: {actual_path.stat().st_size:,} bytes")
+        
+        try:
+            model = load_model(actual_path)
+            if model is None:
+                print(f"[ERROR] Failed to load {model_name} from {actual_path}")
+                return None
+            else:
+                model_type = type(model).__name__
+                print(f"[SUCCESS] Successfully loaded {model_name} (type: {model_type})")
+                
+                # Verify model has required methods
+                if not hasattr(model, 'predict_proba'):
+                    print(f"[WARNING] Model {model_name} does not have predict_proba method")
+                
+                return model
+        except Exception as e:
+            import traceback
+            print(f"[ERROR] Exception loading {model_name}: {e}")
+            print(traceback.format_exc())
+            return None
     else:
-        print(f"Unknown model name: {model_name}")
+        print(f"[ERROR] Unknown model name: {model_name}")
         return None
 
 
 def get_available_models():
-    """Get list of available models"""
+    """Get list of available models with comprehensive path checking"""
     available = []
     model_files = {
-        'Random Forest': BASE_DIR / 'models' / 'random_forest_model.pkl',
-        'XGBoost': BASE_DIR / 'models' / 'xgboost_model.pkl',
-        'Logistic Regression': BASE_DIR / 'models' / 'logistic_regression_model.pkl'
+        'Random Forest': 'random_forest_model.pkl',
+        'XGBoost': 'xgboost_model.pkl',
+        'Logistic Regression': 'logistic_regression_model.pkl'
     }
     
-    for name, path in model_files.items():
-        if path.exists():
-            available.append(name)
+    # Check multiple possible locations
+    possible_dirs = [
+        BASE_DIR / 'models',
+        Path(__file__).parent.parent / 'models',
+        Path.cwd() / 'models',
+        Path('models'),
+    ]
+    
+    for name, filename in model_files.items():
+        found = False
+        for models_dir in possible_dirs:
+            model_path = models_dir / filename
+            try:
+                if model_path.exists() and model_path.is_file():
+                    available.append(name)
+                    found = True
+                    break
+            except Exception:
+                continue
+        
+        # If not found, check if XGBoost library is available for XGBoost model
+        if not found and name == 'XGBoost':
+            try:
+                import xgboost
+                # Model file might not exist, but library is available
+                # Don't add it if file doesn't exist
+                pass
+            except ImportError:
+                pass
     
     return available
 
