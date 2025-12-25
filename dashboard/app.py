@@ -28,6 +28,11 @@ from utils import (
     load_model_metrics, load_threshold_recommendations
 )
 
+# Import transfer system and admin dashboard
+from auth import init_session_state, login, logout, is_authenticated, is_admin
+from transfer_system import show_transfer_page, show_transfer_history
+from admin_dashboard import show_admin_dashboard
+
 # ============================================================================
 # Language Support
 # ============================================================================
@@ -1411,6 +1416,9 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     
+    # Initialize authentication
+    init_session_state()
+    
     # Page options
     page_options = [
         t("nav_home"),
@@ -1422,6 +1430,15 @@ with st.sidebar:
         t("nav_how"),
         t("settings_page")
     ]
+    
+    # Add transfer system pages if authenticated
+    if is_authenticated():
+        if is_admin():
+            page_options.extend(["🏦 نظام الحوالات", "👨‍💼 لوحة تحكم المسؤول"])
+        else:
+            page_options.append("🏦 نظام الحوالات")
+    else:
+        page_options.append("🔐 تسجيل الدخول")
     
     # Check for quick navigation
     default_index = 0
@@ -1437,6 +1454,24 @@ with st.sidebar:
     )
     
     st.markdown("---")
+    
+    # Authentication Section
+    if is_authenticated():
+        st.markdown(f"""
+        <div class="sidebar-section">
+            <h3>👤 المستخدم</h3>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        username = st.session_state.get("username", "Unknown")
+        role = "مسؤول" if is_admin() else "مستخدم"
+        st.info(f"👤 **{username}**\n🔑 **{role}**")
+        
+        if st.button("🚪 تسجيل الخروج", use_container_width=True):
+            logout()
+            st.rerun()
+        
+        st.markdown("---")
     
     # Model Settings Section
     st.markdown(f"""
@@ -3330,6 +3365,62 @@ elif page == t("settings_page"):
                 st.cache_resource.clear()
                 st.success("All settings reset!")
                 st.rerun()
+
+
+# ============================================================================
+# Login Page
+# ============================================================================
+elif page == "🔐 تسجيل الدخول":
+    st.title("🔐 تسجيل الدخول")
+    st.markdown("---")
+    
+    with st.form("login_form"):
+        username = st.text_input("اسم المستخدم", placeholder="أدخل اسم المستخدم")
+        password = st.text_input("كلمة المرور", type="password", placeholder="أدخل كلمة المرور")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            submitted = st.form_submit_button("🔓 تسجيل الدخول", use_container_width=True)
+        with col2:
+            if st.form_submit_button("❌ إلغاء", use_container_width=True):
+                st.rerun()
+        
+        if submitted:
+            if login(username, password):
+                st.success("✅ تم تسجيل الدخول بنجاح!")
+                st.rerun()
+            else:
+                st.error("❌ اسم المستخدم أو كلمة المرور غير صحيحة")
+    
+    st.markdown("---")
+    st.info("💡 **حساب المسؤول:** admin / admin123")
+
+
+# ============================================================================
+# Transfer System Page
+# ============================================================================
+elif page == "🏦 نظام الحوالات":
+    if not is_authenticated():
+        st.error("⚠️ يرجى تسجيل الدخول أولاً")
+        st.info("انتقل إلى صفحة '🔐 تسجيل الدخول' من القائمة الجانبية")
+    else:
+        tab1, tab2 = st.tabs(["💸 إجراء حوالة", "📜 سجل التحويلات"])
+        with tab1:
+            show_transfer_page()
+        with tab2:
+            show_transfer_history()
+
+
+# ============================================================================
+# Admin Dashboard Page
+# ============================================================================
+elif page == "👨‍💼 لوحة تحكم المسؤول":
+    if not is_authenticated():
+        st.error("⚠️ يرجى تسجيل الدخول أولاً")
+    elif not is_admin():
+        st.error("⚠️ يجب أن تكون مسؤولاً للوصول إلى هذه الصفحة")
+    else:
+        show_admin_dashboard()
 
 
 # ============================================================================

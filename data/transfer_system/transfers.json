@@ -1,0 +1,28 @@
+{
+  "transfers": [
+    {
+      "transfer_id": "TXN000001",
+      "from_account": "1234567890",
+      "to_account": "0987654321",
+      "amount": 1000.0,
+      "fraud_probability": 0.5320044807504092,
+      "risk_level": "منخفض",
+      "status": "approved",
+      "created_at": "2025-12-25T22:11:16.579733",
+      "approved_at": null,
+      "approved_by": null
+    },
+    {
+      "transfer_id": "TXN000002",
+      "from_account": "1234567890",
+      "to_account": "0987654321",
+      "amount": 1000.0,
+      "fraud_probability": 1.0297118629161506,
+      "risk_level": "منخفض",
+      "status": "completed",
+      "created_at": "2025-12-25T22:13:01.104322",
+      "approved_at": null,
+      "approved_by": null
+    }
+  ]
+}

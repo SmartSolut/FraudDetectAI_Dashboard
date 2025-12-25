@@ -1,0 +1,25 @@
+{
+  "accounts": [
+    {
+      "account_id": "ACC001",
+      "account_number": "1234567890",
+      "balance": 99000.0,
+      "owner_name": "أحمد محمد",
+      "status": "active"
+    },
+    {
+      "account_id": "ACC002",
+      "account_number": "0987654321",
+      "balance": 51000.0,
+      "owner_name": "فاطمة علي",
+      "status": "active"
+    },
+    {
+      "account_id": "ACC003",
+      "account_number": "1122334455",
+      "balance": 75000.0,
+      "owner_name": "محمد خالد",
+      "status": "active"
+    }
+  ]
+}
